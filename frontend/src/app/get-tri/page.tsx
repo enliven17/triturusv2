@@ -5,7 +5,7 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 // Registry ve package ID'lerini kendi deploy ettiğiniz değerlerle değiştirin
-const REGISTRY_ID = "0xe4093e9889cb1aa29e0ccd64ce2c5af08b784fa867a764498c2df41b7e059203";
+const REGISTRY_ID = "0x18551624b043bfd109d231f8d11b260e4b94dc6c5872312e180b3ef993fd25e6";
 const PACKAGE_ID = "0x3f334316578046c9373ff79e58f1fb291d14d9e9cd38e14237adbdde158f7790";
 
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
@@ -39,11 +39,11 @@ export default function GetTri() {
       const tx = new TransactionBlock();
       tx.moveCall({
         target: `${PACKAGE_ID}::donation::get_name`,
-        arguments: [tx.object(REGISTRY_ID), tx.pure(address)],
+        arguments: [tx.object(REGISTRY_ID), tx.pure(address, 'address')],
       });
       const resp = await suiClient.devInspectTransactionBlock({
         sender: address,
-        transactionBlock: tx,
+        transactionBlock: tx.serialize({ sender: address }),
       });
       const r = resp as any;
       // returnValue boş mu kontrol et

@@ -6,4 +6,4 @@ version = "0.0.1"
 sui = { local = "../../sui-framework" }
 
 [addresses]
-address = "0xaa8568e714cdbac7ee1a2e7fbf47a679b708e438efcc754eb614d43c586cc365" 
+address = "0x00xaa8568e714cdbac7ee1a2e7fbf47a679b708e438efcc754eb614d43c586cc365

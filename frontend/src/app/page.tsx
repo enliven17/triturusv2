@@ -17,9 +17,14 @@ const mockHistory = [
   { to: "bob@tri", amount: 0.8, time: "1h ago" },
 ];
 
-const REGISTRY_ID = "0xe4093e9889cb1aa29e0ccd64ce2c5af08b784fa867a764498c2df41b7e059203";
+const REGISTRY_ID = "0x18551624b043bfd109d231f8d11b260e4b94dc6c5872312e180b3ef993fd25e6";
 const PACKAGE_ID = "0x3f334316578046c9373ff79e58f1fb291d14d9e9cd38e14237adbdde158f7790";
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
+
+function shortenAddress(address: string) {
+  if (!address) return "";
+  return address.slice(0, 6) + "..." + address.slice(-4);
+}
 
 export default function Home() {
   const currentAccount = useCurrentAccount();
@@ -60,25 +65,24 @@ export default function Home() {
       setLoading(true);
       setError("");
       try {
-        const resp = await suiClient.call(
-          "suix_moveCall",
-          [
-            {
-              packageObjectId: PACKAGE_ID,
-              module: "donation",
-              function: "get_name",
-              arguments: [REGISTRY_ID, address],
-            },
-          ]
-        );
-        const r = resp as any;
-        if ((r && Array.isArray(r.results) && r.results[0])) {
-          setTriName(r.results[0]);
-        } else if ((r && Array.isArray(r.returnValues) && r.returnValues[0])) {
-          setTriName(r.returnValues[0]);
-        } else {
-          setTriName(null);
+        const fieldResp = await suiClient.getDynamicFieldObject({
+          parentId: REGISTRY_ID,
+          name: {
+            type: 'address',
+            value: address,
+          },
+        });
+        let triName = null;
+        if (
+          fieldResp.data &&
+          fieldResp.data.content &&
+          fieldResp.data.content.dataType === "moveObject" &&
+          fieldResp.data.content.fields &&
+          (fieldResp.data.content.fields as any).value
+        ) {
+          triName = new TextDecoder().decode(Uint8Array.from((fieldResp.data.content.fields as any).value));
         }
+        setTriName(triName);
       } catch (e: any) {
         setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
         setTriName(null);
@@ -237,7 +241,7 @@ export default function Home() {
         </div>
         {wallet && (
           <div className="bg-white/10 rounded-xl p-4 text-white/90 text-center">
-            <b>Wallet:</b> <span className="font-mono">{address}</span><br />
+            <b>Wallet:</b> <span className="font-mono">{shortenAddress(address)}</span><br />
             <b>@tri Name:</b> <span>{loading ? "Loading..." : error ? error : triName ? triName + "@tri" : "(no name)"}</span>
           </div>
         )}

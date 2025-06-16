@@ -2,10 +2,16 @@
 import { useState, useEffect } from "react";
 import { useWallets } from "@mysten/dapp-kit";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
-const REGISTRY_ID = "0xe4093e9889cb1aa29e0ccd64ce2c5af08b784fa867a764498c2df41b7e059203";
+const REGISTRY_ID = "0x18551624b043bfd109d231f8d11b260e4b94dc6c5872312e180b3ef993fd25e6";
 const PACKAGE_ID = "0x3f334316578046c9373ff79e58f1fb291d14d9e9cd38e14237adbdde158f7790";
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
+
+function shortenAddress(address: string) {
+  if (!address) return "";
+  return address.slice(0, 6) + "..." + address.slice(-4);
+}
 
 export default function Profile() {
   const [showReceived, setShowReceived] = useState(true);
@@ -22,22 +28,25 @@ export default function Profile() {
       setLoading(true);
       setError("");
       try {
-        const resp = await suiClient.call(
-          "suix_moveCall",
-          [
-            {
-              packageObjectId: PACKAGE_ID,
-              module: "donation",
-              function: "get_name",
-              arguments: [REGISTRY_ID, address],
-            },
-          ]
-        );
+        const tx = new TransactionBlock();
+        tx.moveCall({
+          target: `${PACKAGE_ID}::donation::get_name`,
+          arguments: [tx.object(REGISTRY_ID), tx.pure(address, 'address')],
+        });
+        const resp = await suiClient.devInspectTransactionBlock({
+          sender: address,
+          transactionBlock: tx.serialize({ sender: address }),
+        });
         const r = resp as any;
-        if ((r && Array.isArray(r.results) && r.results[0])) {
-          setTriName(r.results[0]);
-        } else if ((r && Array.isArray(r.returnValues) && r.returnValues[0])) {
-          setTriName(r.returnValues[0]);
+        if (
+          r &&
+          r.results &&
+          r.results[0] &&
+          r.results[0].returnValue &&
+          Array.isArray(r.results[0].returnValue) &&
+          r.results[0].returnValue.length > 0
+        ) {
+          setTriName(r.results[0].returnValue);
         } else {
           setTriName(null);
         }
@@ -68,7 +77,7 @@ export default function Profile() {
       <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 flex flex-col gap-4 border border-white/20 relative">
         <h2 className="text-2xl font-bold text-white mb-2 text-center">Profile</h2>
         <div className="flex flex-col gap-2 text-white/90">
-          <div><b>Wallet:</b> <span className="font-mono">{mockProfile.address}</span></div>
+          <div><b>Wallet:</b> <span className="font-mono">{shortenAddress(mockProfile.address)}</span></div>
           <div><b>@tri Name:</b> <span>{loading ? "Loading..." : error ? error : mockProfile.tri}</span></div>
           <div><b>Balance:</b> <span className="font-mono">{mockProfile.balance} SUI</span></div>
         </div>
