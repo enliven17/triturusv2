@@ -1,6 +1,6 @@
 # Triturus
 
-Triturus, Sui blockchain üzerinde çalışan, kullanıcıların @tri isimleri alarak bağış toplayabildiği bir platformdur. Proje, modern bir DEX tarzı UI, glassmorphism, animasyonlu arka planlar ve Sui cüzdan entegrasyonu ile donatılmıştır.
+Triturus, Sui blockchain üzerinde çalışan, kullanıcıların @tri isimleri alarak bağış toplayabildiği bir platformdur. Sui cüzdan entegrasyonu ile donatılmıştır.
 
 ## Proje Yapısı
 
