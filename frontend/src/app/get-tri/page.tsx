@@ -1,5 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useWallets, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+
+// Registry ve package ID'lerini kendi deploy ettiğiniz değerlerle değiştirin
+const REGISTRY_ID = "0x<YOUR_REGISTRY_ID>";
+const PACKAGE_ID = "0x<YOUR_PACKAGE_ID>";
+
+const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
 const takenNames = ["alice@tri", "bob@tri", "charlie@tri"];
 
@@ -9,19 +18,84 @@ export default function GetTri() {
   const [registered, setRegistered] = useState(false);
   const [available, setAvailable] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+  const wallets = useWallets();
+  const wallet = wallets[0];
+  const address = wallet?.accounts?.[0]?.address;
+  const signAndExecute = useSignAndExecuteTransaction();
 
-  const checkAvailability = (name: string) => {
-    setLoading(true);
-    setTimeout(() => {
-      setAvailable(!takenNames.includes(name.toLowerCase()));
-      setLoading(false);
-    }, 800);
+  // Zincirden isim sorgulama
+  const checkAvailability = async (name: string) => {
+    setChecking(true);
+    setError("");
+    try {
+      if (!address) {
+        setAvailable(false);
+        setChecking(false);
+        return;
+      }
+      // get_name fonksiyonu: registry, address
+      const resp = await suiClient.call(
+        "suix_moveCall",
+        [
+          {
+            packageObjectId: PACKAGE_ID,
+            module: "donation",
+            function: "get_name",
+            arguments: [REGISTRY_ID, address],
+          },
+        ]
+      );
+      console.log("get_name resp", resp);
+      const r = resp as any;
+      // Option::Some ise alınmış, None ise alınmamış
+      if ((r && Array.isArray(r.results) && r.results[0]) || (r && Array.isArray(r.returnValues) && r.returnValues[0])) {
+        setAvailable(false);
+      } else {
+        setAvailable(true);
+      }
+    } catch (e: any) {
+      setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
+      setAvailable(false);
+    } finally {
+      setChecking(false);
+    }
   };
 
-  const handleRegister = () => {
-    setRegistered(true);
-    setShowModal(true);
-    setTimeout(() => setShowModal(false), 1800);
+  useEffect(() => {
+    if (input.length > 2) {
+      checkAvailability(input);
+    } else {
+      setAvailable(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input, address]);
+
+  const handleRegister = async () => {
+    if (!wallet || !address) {
+      alert("Wallet not connected");
+      return;
+    }
+    setLoading(true);
+    try {
+      const tx = new TransactionBlock();
+      tx.moveCall({
+        target: `${PACKAGE_ID}::donation::register_name`,
+        arguments: [tx.object(REGISTRY_ID), tx.pure(input)],
+      });
+      await signAndExecute.mutateAsync({
+        transaction: tx.serialize(),
+      });
+      setRegistered(true);
+      setShowModal(true);
+      setTimeout(() => setShowModal(false), 1800);
+    } catch (error) {
+      console.error("Error registering name:", error);
+      alert("Failed to register name");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,15 +113,17 @@ export default function GetTri() {
                 setInput(e.target.value);
                 setRegistered(false);
                 setAvailable(false);
-                if (e.target.value.length > 2) checkAvailability(e.target.value);
+                setError("");
               }}
               autoComplete="off"
             />
-            {loading && <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />}
+            {(loading || checking) && <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />}
           </div>
-          {input && !loading && (
+          {input && !loading && !checking && (
             <div className="mt-2 text-sm">
-              {available ? (
+              {error ? (
+                <span className="text-red-400">{error}</span>
+              ) : available ? (
                 <span className="text-green-300">Available!</span>
               ) : (
                 <span className="text-red-300">Taken</span>
