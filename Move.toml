@@ -1,0 +1,9 @@
+[package]
+name = "donation"
+version = "0.0.1"
+
+[dependencies]
+sui = { local = "../../sui-framework" }
+
+[addresses]
+address = "0xaa8568e714cdbac7ee1a2e7fbf47a679b708e438efcc754eb614d43c586cc365" 
