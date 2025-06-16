@@ -39,15 +39,11 @@ export default function RootLayout({
           <main className="flex flex-col items-center justify-center min-h-[80vh] w-full px-2 sm:px-0">
             {children}
           </main>
-          {/* Footer */}
-          <footer className="w-full flex items-center justify-center py-4 bg-white/5 backdrop-blur-md border-t border-white/10 text-white/60 text-sm mt-8">
-            <div className="flex gap-4">
-              <a href="/get-tri" className="hover:text-white transition">Get @tri Name</a>
-              <a href="/profile" className="hover:text-white transition">Profile</a>
-              <span>&copy; {new Date().getFullYear()} Triturus</span>
-            </div>
-          </footer>
         </WalletProviderClient>
+        {/* Footer */}
+        <footer className="w-full flex items-center justify-center py-2 bg-white/5 backdrop-blur-md border-t border-white/10 text-white/60 text-sm fixed bottom-0 left-0">
+          <span>&copy; {new Date().getFullYear()} Triturus</span>
+        </footer>
       </body>
     </html>
   );

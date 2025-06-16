@@ -43,6 +43,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [triName, setTriName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const filteredNames =
     input.length > 1
@@ -239,7 +242,7 @@ export default function Home() {
             </div>
           )}
         </div>
-        {wallet && (
+        {wallet && mounted && (
           <div className="bg-white/10 rounded-xl p-4 text-white/90 text-center">
             <b>Wallet:</b> <span className="font-mono">{shortenAddress(address)}</span><br />
             <b>@tri Name:</b> <span>{loading ? "Loading..." : error ? error : triName ? triName + "@tri" : "(no name)"}</span>
