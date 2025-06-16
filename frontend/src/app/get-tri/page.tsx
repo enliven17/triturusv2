@@ -5,8 +5,8 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 // Registry ve package ID'lerini kendi deploy ettiğiniz değerlerle değiştirin
-const REGISTRY_ID = "0xdcc891031adff262148f07ee4de9add072937ab9790d7d4718fece931d27f203";
-const PACKAGE_ID = "0xd175205425cd377909b8680a8536a0bbeaa1afff7114f694fd66b87424607f9e";
+const REGISTRY_ID = "0xe4093e9889cb1aa29e0ccd64ce2c5af08b784fa867a764498c2df41b7e059203";
+const PACKAGE_ID = "0x0d6f972610977b591d07d958099964e269c20089c1901d21849e36e63406cb6b";
 
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
@@ -45,9 +45,16 @@ export default function GetTri() {
         sender: address,
         transactionBlock: tx,
       });
-      // resp.results[0].returnValue varsa isim alınmış demektir
       const r = resp as any;
-      if (r && r.results && r.results[0] && r.results[0].returnValue) {
+      // returnValue boş mu kontrol et
+      if (
+        r &&
+        r.results &&
+        r.results[0] &&
+        r.results[0].returnValue &&
+        Array.isArray(r.results[0].returnValue) &&
+        r.results[0].returnValue.length > 0
+      ) {
         setAvailable(false);
       } else {
         setAvailable(true);
