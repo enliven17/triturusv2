@@ -18,7 +18,7 @@ const mockHistory = [
 ];
 
 const REGISTRY_ID = "0xe4093e9889cb1aa29e0ccd64ce2c5af08b784fa867a764498c2df41b7e059203";
-const PACKAGE_ID = "0x0d6f972610977b591d07d958099964e269c20089c1901d21849e36e63406cb6b";
+const PACKAGE_ID = "0x3f334316578046c9373ff79e58f1fb291d14d9e9cd38e14237adbdde158f7790";
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
 export default function Home() {
