@@ -49,6 +49,15 @@ module donation::donation {
         event::emit(NameRegisteredEvent { owner: sender, name });
     }
 
+    /// Kullanıcının ismini getirir
+    public fun get_name(registry: &Registry, owner: address): vector<u8> {
+        if (table::contains(&registry.names, owner)) {
+            *table::borrow(&registry.names, owner)
+        } else {
+            vector::empty()
+        }
+    }
+
     /// Bağış fonksiyonu
     public fun donate(
         recipient: address,

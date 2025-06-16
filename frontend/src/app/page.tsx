@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { useState, useEffect } from "react";
+import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient, useWallets } from "@mysten/dapp-kit";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 
 const mockTriNames = ["alice@tri", "bob@tri", "charlie@tri", "diana@tri"];
 const mockTriToAddress: Record<string, string> = {
@@ -16,9 +17,15 @@ const mockHistory = [
   { to: "bob@tri", amount: 0.8, time: "1h ago" },
 ];
 
+const REGISTRY_ID = "0x<YOUR_REGISTRY_ID>";
+const PACKAGE_ID = "0x<YOUR_PACKAGE_ID>";
+const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
+
 export default function Home() {
   const currentAccount = useCurrentAccount();
-  const suiClient = useSuiClient();
+  const wallets = useWallets();
+  const wallet = wallets[0];
+  const address = wallet?.accounts?.[0]?.address;
   const { mutate: signAndExecuteTransaction, isPending } = useSignAndExecuteTransaction();
   const [input, setInput] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -29,6 +36,8 @@ export default function Home() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [triName, setTriName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const filteredNames =
     input.length > 1
@@ -44,6 +53,41 @@ export default function Home() {
     if (/^0x[a-fA-F0-9]{40,64}$/.test(input)) return input;
     return null;
   };
+
+  useEffect(() => {
+    const fetchTriName = async () => {
+      if (!address) return;
+      setLoading(true);
+      setError("");
+      try {
+        const resp = await suiClient.call(
+          "suix_moveCall",
+          [
+            {
+              packageObjectId: PACKAGE_ID,
+              module: "donation",
+              function: "get_name",
+              arguments: [REGISTRY_ID, address],
+            },
+          ]
+        );
+        const r = resp as any;
+        if ((r && Array.isArray(r.results) && r.results[0])) {
+          setTriName(r.results[0]);
+        } else if ((r && Array.isArray(r.returnValues) && r.returnValues[0])) {
+          setTriName(r.returnValues[0]);
+        } else {
+          setTriName(null);
+        }
+      } catch (e: any) {
+        setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
+        setTriName(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTriName();
+  }, [address]);
 
   const handleSend = async () => {
     setError(null);
@@ -191,6 +235,12 @@ export default function Home() {
             </div>
           )}
         </div>
+        {wallet && (
+          <div className="bg-white/10 rounded-xl p-4 text-white/90 text-center">
+            <b>Wallet:</b> <span className="font-mono">{address}</span><br />
+            <b>@tri Name:</b> <span>{loading ? "Loading..." : error ? error : triName ? triName + "@tri" : "(no name)"}</span>
+          </div>
+        )}
       </div>
       {/* Confirmation Modal */}
       {showModal && (

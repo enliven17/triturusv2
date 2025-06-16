@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useWallets, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 
 // Registry ve package ID'lerini kendi deploy ettiğiniz değerlerle değiştirin
 const REGISTRY_ID = "0x<YOUR_REGISTRY_ID>";
@@ -35,22 +35,19 @@ export default function GetTri() {
         setChecking(false);
         return;
       }
-      // get_name fonksiyonu: registry, address
-      const resp = await suiClient.call(
-        "suix_moveCall",
-        [
-          {
-            packageObjectId: PACKAGE_ID,
-            module: "donation",
-            function: "get_name",
-            arguments: [REGISTRY_ID, address],
-          },
-        ]
-      );
-      console.log("get_name resp", resp);
+      // TransactionBlock ile get_name fonksiyonunu simüle et
+      const tx = new TransactionBlock();
+      tx.moveCall({
+        target: `${PACKAGE_ID}::donation::get_name`,
+        arguments: [tx.object(REGISTRY_ID), tx.pure(address)],
+      });
+      const resp = await suiClient.devInspectTransactionBlock({
+        sender: address,
+        transactionBlock: tx,
+      });
+      // resp.results[0].returnValue varsa isim alınmış demektir
       const r = resp as any;
-      // Option::Some ise alınmış, None ise alınmamış
-      if ((r && Array.isArray(r.results) && r.results[0]) || (r && Array.isArray(r.returnValues) && r.returnValues[0])) {
+      if (r && r.results && r.results[0] && r.results[0].returnValue) {
         setAvailable(false);
       } else {
         setAvailable(true);
