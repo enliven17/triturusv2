@@ -35,11 +35,12 @@ module donation::donation {
     }
 
     /// Registry oluşturucu (ilk deployda çağrılır)
-    public fun init_registry(ctx: &mut tx_context::TxContext): Registry {
-        Registry {
+    public fun init_registry(ctx: &mut tx_context::TxContext) {
+        let registry = Registry {
             id: object::new(ctx),
             names: table::new<address, vector<u8>>(ctx),
-        }
+        };
+        transfer::transfer(registry, tx_context::sender(ctx));
     }
 
     /// Kullanıcı ismini kaydeder
