@@ -41,8 +41,17 @@ export default function RootLayout({
           </main>
         </WalletProviderClient>
         {/* Footer */}
-        <footer className="w-full flex items-center justify-center py-2 bg-white/5 backdrop-blur-md border-t border-white/10 text-white/60 text-sm fixed bottom-0 left-0">
+        <footer className="w-full flex items-center justify-center gap-4 py-2 bg-white/5 backdrop-blur-md border-t border-white/10 text-white/60 text-sm fixed bottom-0 left-0">
           <span>&copy; {new Date().getFullYear()} Triturus</span>
+          <a
+            href="https://x.com/TriturusApp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-2 text-white/80 hover:text-blue-400 font-semibold transition-colors"
+            title="X (Twitter)"
+          >
+            X
+          </a>
         </footer>
       </body>
     </html>

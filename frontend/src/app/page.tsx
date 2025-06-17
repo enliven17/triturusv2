@@ -17,8 +17,8 @@ const mockHistory = [
   { to: "bob@tri", amount: 0.8, time: "1h ago" },
 ];
 
-const REGISTRY_ID = "0x43aa2a1af2115300d54f4f8ba06f10f255f0fb2e40d1d6deb2a4d489e559c8ac";
-const PACKAGE_ID = "0x902be805ccb5d233ababfdbe750ab97cf93a26952a8b48218bcb970bbe422182";
+const REGISTRY_ID = "0x1909789c965257d9782898b2b229828fe2314de9b896def05c89ccfb9d53473b";
+const PACKAGE_ID = "0x8eed833809bdd02556304e15c44df3b734d948ea4b5b1009d836e75e0b4284d5";
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
 function shortenAddress(address: string) {

@@ -11,6 +11,7 @@ module tri_name_service::tri_name {
     const ENameAlreadyExists: u64 = 0;
     const ENameTooShort: u64 = 1;
     const ENameTooLong: u64 = 2;
+    const EInvalidCharacters: u64 = 3;
 
     /// Constants
     const MIN_NAME_LENGTH: u64 = 3;
@@ -27,7 +28,6 @@ module tri_name_service::tri_name {
     struct NameNFT has key, store {
         id: UID,
         name: String,
-        owner: address,
         created_at: u64,
     }
 
@@ -60,11 +60,27 @@ module tri_name_service::tri_name {
         result
     }
 
+    fun is_valid_char(c: u8): bool {
+        // Allow a-z, A-Z, 0-9, _
+        (c >= 0x61 && c <= 0x7A) || (c >= 0x41 && c <= 0x5A) || (c >= 0x30 && c <= 0x39) || (c == 0x5F)
+    }
+
+    fun validate_name(name: vector<u8>) {
+        let len = vector::length(&name);
+        let mut_i = 0;
+        while (mut_i < len) {
+            let c = *vector::borrow(&name, mut_i);
+            assert!(is_valid_char(c), EInvalidCharacters);
+            mut_i = mut_i + 1;
+        }
+    }
+
     public entry fun register_name(
         name_service: &mut TriNameService,
         name: vector<u8>,
         ctx: &mut TxContext
     ) {
+        validate_name(name);
         let name_with_suffix = append_suffix(name);
         let name_str = string::utf8(name_with_suffix);
         
@@ -77,7 +93,6 @@ module tri_name_service::tri_name {
         let name_nft = NameNFT {
             id: object::new(ctx),
             name: name_str,
-            owner: tx_context::sender(ctx),
             created_at: tx_context::epoch(ctx),
         };
 
@@ -91,37 +106,22 @@ module tri_name_service::tri_name {
         });
     }
 
-    public fun get_name_owner(name_service: &TriNameService, name: vector<u8>): address {
-        let name_with_suffix = append_suffix(name);
-        let name_str = string::utf8(name_with_suffix);
-        assert!(table::contains(&name_service.names, name_str), ENameAlreadyExists);
-        let name_nft = table::borrow(&name_service.names, name_str);
-        name_nft.owner
-    }
-
     public entry fun transfer_name(
         name_service: &mut TriNameService,
         name: vector<u8>,
         to: address,
-        _ctx: &mut TxContext
+        ctx: &mut TxContext
     ) {
         let name_with_suffix = append_suffix(name);
         let name_str = string::utf8(name_with_suffix);
         assert!(table::contains(&name_service.names, name_str), ENameAlreadyExists);
-        
         let name_nft = table::remove(&mut name_service.names, name_str);
-        let from = name_nft.owner;
-        
-        // Update owner
-        name_nft.owner = to;
-        
-        // Add back to table
-        table::add(&mut name_service.names, name_str, name_nft);
-
+        // Only owner can transfer (checked by Move's object ownership model)
+        transfer::transfer(name_nft, to);
         // Emit event
         event::emit(NameTransferred {
             name: name_str,
-            from,
+            from: tx_context::sender(ctx),
             to,
         });
     }
