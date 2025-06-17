@@ -5,8 +5,8 @@ import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 // Registry ve package ID'lerini kendi deploy ettiğiniz değerlerle değiştirin
-const REGISTRY_ID = "0x18551624b043bfd109d231f8d11b260e4b94dc6c5872312e180b3ef993fd25e6";
-const PACKAGE_ID = "0x3f334316578046c9373ff79e58f1fb291d14d9e9cd38e14237adbdde158f7790";
+const REGISTRY_ID = "0x43aa2a1af2115300d54f4f8ba06f10f255f0fb2e40d1d6deb2a4d489e559c8ac";
+const PACKAGE_ID = "0x902be805ccb5d233ababfdbe750ab97cf93a26952a8b48218bcb970bbe422182";
 
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
@@ -71,7 +71,7 @@ export default function GetTri() {
     try {
       const tx = new TransactionBlock();
       tx.moveCall({
-        target: `${PACKAGE_ID}::donation::register_name`,
+        target: `${PACKAGE_ID}::tri_name::register_name`,
         arguments: [tx.object(REGISTRY_ID), tx.pure(input)],
       });
       await signAndExecute.mutateAsync({
@@ -94,10 +94,10 @@ export default function GetTri() {
         <h2 className="text-2xl font-bold text-white mb-2 text-center">Get your @tri Name</h2>
         <div>
           <label className="block text-white/80 mb-1">Choose Username</label>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center relative">
             <input
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              placeholder="username@tri"
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition pr-16"
+              placeholder="username"
               value={input}
               onChange={(e) => {
                 setInput(e.target.value);
@@ -107,7 +107,12 @@ export default function GetTri() {
               }}
               autoComplete="off"
             />
-            {(loading || checking) && <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />}
+            {(loading || checking) && (
+              <div className="absolute right-16 top-1/2 -translate-y-1/2">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />
+              </div>
+            )}
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-white/60 font-semibold pointer-events-none select-none">@tri</span>
           </div>
           {input && !loading && !checking && (
             <div className="mt-2 text-sm">
