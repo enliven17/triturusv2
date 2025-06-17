@@ -30,35 +30,21 @@ export default function GetTri() {
     setChecking(true);
     setError("");
     try {
-      if (!address) {
+      if (!name || name.length < 3) {
         setAvailable(false);
         setChecking(false);
         return;
       }
-      // TransactionBlock ile get_name fonksiyonunu simüle et
-      const tx = new TransactionBlock();
-      tx.moveCall({
-        target: `${PACKAGE_ID}::donation::get_name`,
-        arguments: [tx.object(REGISTRY_ID), tx.pure(address, 'address')],
+      // Kullanıcı adını zincir formatına (vector<u8>) çevir
+      const fieldResp = await suiClient.getDynamicFieldObject({
+        parentId: REGISTRY_ID,
+        name: {
+          type: 'vector<u8>',
+          value: Array.from(new TextEncoder().encode(name)),
+        },
       });
-      const resp = await suiClient.devInspectTransactionBlock({
-        sender: address,
-        transactionBlock: tx.serialize({ sender: address }),
-      });
-      const r = resp as any;
-      // returnValue boş mu kontrol et
-      if (
-        r &&
-        r.results &&
-        r.results[0] &&
-        r.results[0].returnValue &&
-        Array.isArray(r.results[0].returnValue) &&
-        r.results[0].returnValue.length > 0
-      ) {
-        setAvailable(false);
-      } else {
-        setAvailable(true);
-      }
+      const isTaken = !!(fieldResp.data && fieldResp.data.content);
+      setAvailable(!isTaken);
     } catch (e: any) {
       setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
       setAvailable(false);
