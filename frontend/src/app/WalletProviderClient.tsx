@@ -29,6 +29,7 @@ export default function WalletProviderClient({ children }: { children: React.Rea
               <nav className="flex gap-6 text-white/80 text-lg justify-center items-center">
                 <Link href="/" className="hover:text-white transition">Home</Link>
                 <Link href="/get-tri" className="hover:text-white transition font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-slow">Get @tri Name</Link>
+                <Link href="/profile" className="hover:text-white transition">Profile</Link>
               </nav>
             </div>
             <div className="z-10">
