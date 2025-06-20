@@ -5,7 +5,7 @@ import {
   useSignAndExecuteTransaction,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { TransactionBlock } from "@mysten/sui";
+import { TransactionBlock } from "@mysten/sui/transactions";
 import Link from "next/link";
 
 const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
