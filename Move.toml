@@ -1,0 +1,9 @@
+[package]
+name = "tri_name_service"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "devnet" }
+
+[addresses]
+tri_name_service = "0x0" 

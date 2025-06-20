@@ -4,8 +4,8 @@ import { useWallets } from "@mysten/dapp-kit";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
-const REGISTRY_ID = "0x1909789c965257d9782898b2b229828fe2314de9b896def05c89ccfb9d53473b";
-const PACKAGE_ID = "0x8eed833809bdd02556304e15c44df3b734d948ea4b5b1009d836e75e0b4284d5";
+const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
+const PACKAGE_ID = process.env.NEXT_PUBLIC_PACKAGE_ID!;
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
 function shortenAddress(address: string) {
