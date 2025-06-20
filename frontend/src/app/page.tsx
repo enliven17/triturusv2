@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import {
   useCurrentAccount,
-  useSignAndExecuteTransaction,
+  useSignAndExecuteTransactionBlock,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { TransactionBlock } from "@mysten/sui/transactions";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 import Link from "next/link";
 
 const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
@@ -18,7 +18,7 @@ function shortenAddress(address: string) {
 export default function Home() {
   const account = useCurrentAccount();
   const suiClient = useSuiClient();
-  const { mutate: signAndExecute } = useSignAndExecuteTransaction();
+  const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
 
   const [mounted, setMounted] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -62,7 +62,7 @@ export default function Home() {
       tx.transferObjects([coin], tx.pure(toAddress));
 
       signAndExecute(
-        { transaction: tx },
+        { transactionBlock: tx },
         {
           onError: (err: Error) => {
             setError(err.message);

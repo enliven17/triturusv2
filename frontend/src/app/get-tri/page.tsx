@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useWallets, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
+import { useWallets, useSignAndExecuteTransactionBlock } from "@mysten/dapp-kit";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui.js/client";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
@@ -22,7 +22,7 @@ export default function GetTri() {
   const wallets = useWallets();
   const wallet = wallets[0];
   const address = wallet?.accounts?.[0]?.address;
-  const signAndExecute = useSignAndExecuteTransaction();
+  const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
 
   // Zincirden isim sorgulama
   const checkAvailability = async (name: string) => {
@@ -73,8 +73,8 @@ export default function GetTri() {
         target: `${PACKAGE_ID}::tri_name::register_name`,
         arguments: [tx.object(REGISTRY_ID), tx.pure(input)],
       });
-      await signAndExecute.mutateAsync({
-        transaction: tx.serialize(),
+      await signAndExecuteTransactionBlock({
+        transactionBlock: tx,
       });
       setRegistered(true);
       setShowModal(true);
