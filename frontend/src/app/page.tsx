@@ -1,24 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient, useWallets } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignAndExecuteTransaction, useWallets } from "@mysten/dapp-kit";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiObjectData } from '@mysten/sui.js/client';
 
-const mockTriNames = ["alice@tri", "bob@tri", "charlie@tri", "diana@tri"];
-const mockTriToAddress: Record<string, string> = {
-  "alice@tri": "0x1234567890abcdef1234567890abcdef12345678",
-  "bob@tri": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-  "charlie@tri": "0x1111111111111111111111111111111111111111",
-  "diana@tri": "0x2222222222222222222222222222222222222222",
-};
-const mockHistory = [
-  { to: "alice@tri", amount: 2.5, time: "2m ago" },
-  { to: "0x1234...abcd", amount: 1.1, time: "10m ago" },
-  { to: "bob@tri", amount: 0.8, time: "1h ago" },
-];
-
-const REGISTRY_ID = "0x1909789c965257d9782898b2b229828fe2314de9b896def05c89ccfb9d53473b";
-const PACKAGE_ID = "0x8eed833809bdd02556304e15c44df3b734d948ea4b5b1009d836e75e0b4284d5";
+const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
 function shortenAddress(address: string) {
@@ -53,9 +40,24 @@ export default function Home() {
       : [];
 
   // Resolve input to Sui address
-  const resolveAddress = (input: string) => {
+  const resolveAddress = async (input: string): Promise<string | null> => {
     if (input.endsWith("@tri")) {
-      return mockTriToAddress[input] || null;
+      try {
+        const name = input.slice(0, -4);
+        const fieldResp = await suiClient.getDynamicFieldObject({
+          parentId: REGISTRY_ID,
+          name: {
+            type: 'vector<u8>',
+            value: Array.from(new TextEncoder().encode(name)),
+          },
+        });
+        if (fieldResp.data && fieldResp.data.content && fieldResp.data.content.dataType === 'moveObject') {
+          return (fieldResp.data.content.fields as { value: string }).value;
+        }
+      } catch (error) {
+        console.error("Error resolving @tri name:", error);
+        return null;
+      }
     }
     // Basic Sui address validation
     if (/^0x[a-fA-F0-9]{40,64}$/.test(input)) return input;
@@ -63,44 +65,55 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const fetchTriName = async () => {
+    const fetchTriNameForOwner = async () => {
       if (!address) return;
       setLoading(true);
       setError("");
       try {
-        const fieldResp = await suiClient.getDynamicFieldObject({
-          parentId: REGISTRY_ID,
-          name: {
-            type: 'address',
-            value: address,
-          },
+        // Query all dynamic fields of the registry
+        let allFields: SuiObjectData[] = [];
+        let hasNextPage = true;
+        let cursor: string | null = null;
+        while(hasNextPage) {
+          const page = await suiClient.getDynamicFields({ parentId: REGISTRY_ID, cursor });
+          allFields = [...allFields, ...page.data];
+          hasNextPage = page.hasNextPage;
+          cursor = page.nextCursor;
+        }
+
+        // Find the field where the value matches the user's address
+        const userField = allFields.find(field => {
+            if (field.data?.content?.dataType === 'moveObject') {
+                const fields = field.data.content.fields as { value: string };
+                return fields?.value === address;
+            }
+            return false;
         });
+        
         let triName = null;
-        if (
-          fieldResp.data &&
-          fieldResp.data.content &&
-          fieldResp.data.content.dataType === "moveObject" &&
-          fieldResp.data.content.fields &&
-          (fieldResp.data.content.fields as any).value
-        ) {
-          triName = new TextDecoder().decode(Uint8Array.from((fieldResp.data.content.fields as any).value));
+        if (userField && userField.name?.type === 'vector<u8>') {
+          // The name of the dynamic field is the @tri name in bytes
+          const nameValue = userField.name.value as number[];
+          triName = new TextDecoder().decode(Uint8Array.from(nameValue));
         }
         setTriName(triName);
-      } catch (e: any) {
-        setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
+
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        setError("Blockchain sorgusunda hata: " + errorMessage);
         setTriName(null);
       } finally {
         setLoading(false);
       }
     };
-    fetchTriName();
+    fetchTriNameForOwner();
   }, [address]);
 
   const handleSend = async () => {
     setError(null);
-    const toAddress = resolveAddress(input);
+    const toAddress = await resolveAddress(input);
     if (!toAddress) {
-      setError("Invalid Sui address or @tri username.");
+      setError("Invalid or unregistered Sui address or @tri username.");
       return;
     }
     if (!currentAccount) {
@@ -122,8 +135,14 @@ export default function Home() {
         signAndExecuteTransaction(
           { transaction: tx.serialize() },
           {
-            onSuccess: () => resolve(true),
-            onError: (e) => reject(e),
+            onSuccess: (result) => {
+              console.log("Transaction successful:", result);
+              resolve(result);
+            },
+            onError: (e: Error) => {
+               console.error("Transaction error:", e);
+               reject(e)
+            },
           }
         );
       });
@@ -131,9 +150,10 @@ export default function Home() {
       setShowModal(true);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
       setSending(false);
-      setError(e.message || "Transaction failed");
+      setError(errorMessage || "Transaction failed");
     }
   };
 
@@ -151,12 +171,9 @@ export default function Home() {
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
-              setShowDropdown(true);
-              setLoadingNames(true);
-              setTimeout(() => setLoadingNames(false), 500);
             }}
-            onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            onFocus={() => setShowDropdown(false)}
+            onBlur={() => setShowDropdown(false)}
             autoComplete="off"
           />
           {/* Auto-suggest Dropdown */}
@@ -174,7 +191,6 @@ export default function Home() {
                     className="px-4 py-2 hover:bg-blue-100 cursor-pointer text-blue-900 rounded"
                     onMouseDown={() => {
                       setInput(name);
-                      setShowDropdown(false);
                     }}
                   >
                     {name}
@@ -213,7 +229,7 @@ export default function Home() {
         {/* Send Button */}
         <button
           className={`w-full py-3 rounded-lg bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-lg shadow-lg transition-all duration-200 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-95 ${sending || isPending ? "opacity-60 cursor-not-allowed" : "hover:scale-105 hover:shadow-xl animate-pulse"}`}
-          disabled={sending || isPending || !input || !amount || Number(amount) < 0.01 || !currentAccount}
+          disabled={sending || isPending || !input || !amount || Number(amount) <= 0 || !currentAccount}
           onClick={handleSend}
         >
           <span className="relative z-10">{sending || isPending ? "Sending..." : "Send Donation"}</span>
@@ -222,30 +238,14 @@ export default function Home() {
         </button>
         {/* Transaction History Mini-Card */}
         <div className="mt-2">
-          <button
-            className="flex items-center gap-2 text-blue-200 hover:text-white transition text-sm"
-            onClick={() => setShowHistory((v) => !v)}
-            type="button"
-          >
-            <span className="font-semibold">Recent Donations</span>
-            <svg className={`w-4 h-4 transition-transform ${showHistory ? "rotate-180" : "rotate-0"}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-          </button>
-          {showHistory && (
-            <div className="bg-white/20 rounded-lg mt-2 p-3 text-white text-sm animate-fade-in">
-              {mockHistory.map((tx, i) => (
-                <div key={i} className="flex justify-between items-center py-1 border-b border-white/10 last:border-b-0">
-                  <span>{tx.to}</span>
-                  <span className="font-mono">{tx.amount} SUI</span>
-                  <span className="text-xs text-white/60">{tx.time}</span>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="bg-white/10 rounded-lg mt-2 p-3 text-white text-sm">
+            This is a simplified donation interface. Enter a valid @tri name or a Sui address to send funds.
+          </div>
         </div>
         {wallet && mounted && (
           <div className="bg-white/10 rounded-xl p-4 text-white/90 text-center">
             <b>Wallet:</b> <span className="font-mono">{shortenAddress(address)}</span><br />
-            <b>@tri Name:</b> <span>{loading ? "Loading..." : error ? error : triName ? triName + "@tri" : "(no name)"}</span>
+            <b>@tri Name:</b> <span>{loading ? "Loading..." : error ? "Error loading name" : triName ? triName + "@tri" : "(no name registered)"}</span>
           </div>
         )}
       </div>

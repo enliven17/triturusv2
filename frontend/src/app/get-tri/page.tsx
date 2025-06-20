@@ -11,8 +11,6 @@ const PACKAGE_ID = process.env.NEXT_PUBLIC_PACKAGE_ID!;
 
 const suiClient = new SuiClient({ url: getFullnodeUrl("devnet") });
 
-const takenNames = ["alice@tri", "bob@tri", "charlie@tri"];
-
 export default function GetTri() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,8 +44,9 @@ export default function GetTri() {
       });
       const isTaken = !!(fieldResp.data && fieldResp.data.content);
       setAvailable(!isTaken);
-    } catch (e: any) {
-      setError("Blockchain sorgusunda hata: " + (e.message || e.toString()));
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      setError("Blockchain sorgusunda hata: " + errorMessage);
       setAvailable(false);
     } finally {
       setChecking(false);
@@ -60,7 +59,6 @@ export default function GetTri() {
     } else {
       setAvailable(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, address]);
 
   const handleRegister = async () => {
