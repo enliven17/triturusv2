@@ -7,8 +7,11 @@ import {
 } from "@mysten/dapp-kit";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
+const CustomConnectButton = dynamic(() => import("../components/CustomConnectButton"), { ssr: false });
 
 function shortenAddress(address: string) {
   if (!address) return "";
@@ -19,6 +22,7 @@ export default function Home() {
   const account = useCurrentAccount();
   const suiClient = useSuiClient();
   const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
+  const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -30,6 +34,12 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted && account) {
+      router.replace("/");
+    }
+  }, [mounted, account, router]);
 
   const handleSend = async () => {
     if (!account || !recipient || !amount || Number(amount) <= 0) {
@@ -82,20 +92,17 @@ export default function Home() {
   };
   
   const renderWelcome = () => (
-     <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 flex flex-col gap-6 border border-white/20">
-        <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Welcome to Triturus
-        </h1>
-        <p className="text-center text-lg text-white/80">
-          Your decentralized identity on the Sui blockchain. Please connect your wallet to get started.
-        </p>
-         <Link
-          href="/get-tri"
-          className="w-full mt-4 py-3 text-center rounded-lg bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-lg shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
-        >
-          Get your @tri Name
-        </Link>
+    <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 flex flex-col gap-6 border border-white/20">
+      <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+        Welcome to Triturus
+      </h1>
+      <p className="text-center text-lg text-white/80">
+        Your decentralized identity on the Sui blockchain. Please connect your wallet to get started.
+      </p>
+      <div className="w-full mt-4 flex justify-center">
+        <CustomConnectButton />
       </div>
+    </div>
   );
 
   const renderDonation = () => (
@@ -135,8 +142,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center w-full max-w-2xl mt-12 text-white">
-      {mounted && account ? renderDonation() : renderWelcome()}
-       {showModal && (
+      {mounted && !account ? renderWelcome() : mounted && account ? renderDonation() : null}
+      {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50" onClick={() => setShowModal(false)}>
           <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 text-gray-800" onClick={(e) => e.stopPropagation()}>
             <span className="text-4xl">🎉</span>
