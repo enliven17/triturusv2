@@ -26,14 +26,12 @@ export default function WalletProviderClient({ children }: { children: React.Rea
               {/* Logo Section */}
               <div className="flex items-center gap-2 sm:gap-3 z-10">
                 <div className="relative">
-                  <Image
+                  <img
                     src="/webwhite.png"
                     alt="Triturus Logo"
-                    width={32}
-                    height={32}
+                    width="32"
+                    height="32"
                     className="sm:w-10 sm:h-10 object-contain"
-                    priority
-                    unoptimized
                   />
                 </div>
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
