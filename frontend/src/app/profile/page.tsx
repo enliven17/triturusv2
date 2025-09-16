@@ -143,8 +143,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl mt-12 text-white">
-      <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20 animate-fadeInUp">
+    <div className="flex flex-col items-center w-full max-w-4xl mt-2 sm:mt-12 text-white px-3 sm:px-0">
+      <div className="w-full bg-white/10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-8 border border-white/20 animate-fadeInUp">
         {renderContent()}
       </div>
     </div>

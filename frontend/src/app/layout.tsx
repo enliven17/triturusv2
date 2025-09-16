@@ -37,23 +37,25 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen">
           <WalletProviderClient>
             {/* Main Content with navbar spacing */}
-            <main className="flex-1 flex flex-col items-center justify-start w-full px-2 sm:px-0 pt-24 pb-8">
+            <main className="flex-1 flex flex-col items-center justify-start w-full px-2 sm:px-0 pt-16 sm:pt-24 pb-4 sm:pb-8">
               {children}
             </main>
           </WalletProviderClient>
           
           {/* Static Footer at bottom */}
-          <footer className="w-full flex items-center justify-center gap-4 py-4 glass border-t border-white/10 text-white/60 text-sm mt-auto">
-            <span>&copy; {new Date().getFullYear()} Triturus</span>
-            <a
-              href="https://x.com/TriturusApp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-white/80 hover:text-blue-400 font-semibold transition-colors"
-              title="X (Twitter)"
-            >
-              X
-            </a>
+          <footer className="w-full flex items-center justify-center py-2 sm:py-4 glass border-t border-white/10 text-white/60 text-xs sm:text-sm mt-auto">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span>&copy; {new Date().getFullYear()} Triturus</span>
+              <a
+                href="https://x.com/TriturusApp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/80 hover:text-blue-400 font-semibold transition-colors"
+                title="X (Twitter)"
+              >
+                X
+              </a>
+            </div>
           </footer>
         </div>
       </body>

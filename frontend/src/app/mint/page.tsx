@@ -46,22 +46,22 @@ export default function MintPage() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-w-6xl mt-4 sm:mt-8 lg:mt-12 text-white px-4 sm:px-6 lg:px-8">
-      <div className="w-full glass-card rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 animate-fadeInUp">
-        <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-6">
+    <div className="flex flex-col items-center w-full max-w-6xl mt-2 sm:mt-8 lg:mt-12 text-white px-3 sm:px-6 lg:px-8">
+      <div className="w-full glass-card rounded-xl sm:rounded-3xl shadow-2xl p-4 sm:p-8 animate-fadeInUp">
+        <h1 className="text-xl sm:text-3xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4 sm:mb-6">
           Mint Your Project as NFT
         </h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <label className="block text-white/80 mb-2 font-semibold">Project Title</label>
+              <label className="block text-white/80 mb-1 sm:mb-2 font-semibold text-sm sm:text-base">Project Title</label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-sm sm:text-base"
                 placeholder="Enter your project title"
               />
             </div>

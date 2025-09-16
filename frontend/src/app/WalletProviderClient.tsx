@@ -21,23 +21,23 @@ export default function WalletProviderClient({ children }: { children: React.Rea
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider theme={darkTheme()}>
           {/* Floating Sticky Navbar */}
-          <header className="fixed top-2 sm:top-4 left-1/2 w-[98%] sm:w-[95%] max-w-6xl floating-navbar rounded-2xl z-50 opacity-0 animate-slideDown" style={{ transform: 'translateX(-50%)' }}>
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+          <header className="fixed top-1 sm:top-4 left-1/2 w-[96%] sm:w-[95%] max-w-6xl floating-navbar rounded-xl sm:rounded-2xl z-50 opacity-0 animate-slideDown" style={{ transform: 'translateX(-50%)' }}>
+            <div className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-4">
               {/* Logo Section */}
-              <div className="flex items-center gap-2 sm:gap-3 z-10">
+              <div className="flex items-center gap-1 sm:gap-3 z-10">
                 <div className="relative">
                   <img
                     src="/webwhite.png"
                     alt="Triturus Logo"
-                    width="32"
-                    height="32"
+                    width="24"
+                    height="24"
                     className="sm:w-10 sm:h-10 object-contain"
                   />
                 </div>
-                <span className="text-lg sm:text-2xl font-bold text-white tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <span className="text-sm sm:text-2xl font-bold text-white tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Triturus
                 </span>
-                <span className="text-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-1 rounded-full font-medium hidden sm:inline">
+                <span className="text-xs bg-gradient-to-r from-blue-500 to-purple-600 text-white px-1.5 py-0.5 rounded-full font-medium text-[10px] sm:text-xs sm:px-2 sm:py-1">
                   AI
                 </span>
               </div>
@@ -81,7 +81,7 @@ export default function WalletProviderClient({ children }: { children: React.Rea
                 </button>
 
                 {/* Connect Button */}
-                <div className="scale-90 sm:scale-100">
+                <div>
                   <CustomConnectButton />
                 </div>
               </div>

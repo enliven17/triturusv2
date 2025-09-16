@@ -43,46 +43,46 @@ export default function ShowcasePage() {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col items-center w-full max-w-[1400px] mt-4 sm:mt-8 lg:mt-12 text-white space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center w-full max-w-[1400px] mt-2 sm:mt-8 lg:mt-12 text-white space-y-4 sm:space-y-8 px-3 sm:px-6 lg:px-8">
       {/* Header Section */}
-      <div className="w-full glass-card rounded-3xl p-8 hover-lift animate-fadeInUp">
-        <div className="text-center space-y-6">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-4 py-2 rounded-full border border-blue-500/30">
-            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-            <span className="text-blue-300 text-sm font-medium">AI-Curated Showcase</span>
+      <div className="w-full glass-card rounded-xl sm:rounded-3xl p-4 sm:p-8 hover-lift animate-fadeInUp">
+        <div className="text-center space-y-3 sm:space-y-6">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-blue-500/30">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <span className="text-blue-300 text-xs sm:text-sm font-medium">AI-Curated Showcase</span>
           </div>
           
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
             Freelancer Showcase
           </h1>
           
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
+          <p className="text-sm sm:text-xl text-white/80 max-w-3xl mx-auto px-2">
             Discover exceptional projects created by talented freelancers using cutting-edge AI tools
           </p>
         </div>
         
         {/* AI-Powered Filters */}
-        <div className="flex flex-wrap gap-3 justify-center mt-8">
-          <button className="px-6 py-3 bg-white/15 text-white rounded-xl hover:scale-[1.02] transition-all border border-white/30 font-medium hover:bg-white/20">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mt-4 sm:mt-8">
+          <button className="px-3 py-2 sm:px-6 sm:py-3 bg-white/15 text-white rounded-lg sm:rounded-xl hover:scale-[1.02] transition-all border border-white/30 font-medium hover:bg-white/20 text-xs sm:text-base">
             🤖 AI Recommended
           </button>
-          <button className="px-6 py-3 bg-white/10 text-white/80 rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white">
+          <button className="px-3 py-2 sm:px-6 sm:py-3 bg-white/10 text-white/80 rounded-lg sm:rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white text-xs sm:text-base">
             🎨 Design
           </button>
-          <button className="px-6 py-3 bg-white/10 text-white/80 rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white">
+          <button className="px-3 py-2 sm:px-6 sm:py-3 bg-white/10 text-white/80 rounded-lg sm:rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white text-xs sm:text-base">
             💻 Development
           </button>
-          <button className="px-6 py-3 bg-white/10 text-white/80 rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white">
+          <button className="px-3 py-2 sm:px-6 sm:py-3 bg-white/10 text-white/80 rounded-lg sm:rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white text-xs sm:text-base">
             ✍️ Writing
           </button>
-          <button className="px-6 py-3 bg-white/10 text-white/80 rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white">
+          <button className="px-3 py-2 sm:px-6 sm:py-3 bg-white/10 text-white/80 rounded-lg sm:rounded-xl hover:scale-[1.02] transition-all border border-white/20 hover:bg-white/15 hover:text-white text-xs sm:text-base">
             📱 Marketing
           </button>
         </div>
       </div>
 
       {/* AI Insights */}
-      <div className="w-full glass rounded-2xl p-6 animate-stagger-1">
+      <div className="w-full glass rounded-xl sm:rounded-2xl p-4 sm:p-6 animate-stagger-1">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center ai-glow">
             <span className="text-white text-sm">🧠</span>

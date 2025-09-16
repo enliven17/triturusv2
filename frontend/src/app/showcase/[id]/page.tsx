@@ -79,7 +79,7 @@ export default function ProjectDetailPage() {
   if (!mounted || !project) return null;
 
   return (
-    <div className="flex flex-col items-center w-full max-w-[1400px] mt-4 sm:mt-8 lg:mt-12 text-white space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center w-full max-w-[1400px] mt-2 sm:mt-8 lg:mt-12 text-white space-y-4 sm:space-y-8 px-3 sm:px-6 lg:px-8">
       {/* Back Button */}
       <div className="w-full animate-fadeInLeft">
         <button 
@@ -93,9 +93,9 @@ export default function ProjectDetailPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 w-full">
         {/* Left Column - Project Images */}
-        <div className="lg:col-span-2 space-y-6 animate-fadeInLeft">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6 animate-fadeInLeft">
           {/* Main Image */}
           <div className="glass-card rounded-2xl overflow-hidden">
             <div className="aspect-video bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-cyan-500/20 flex items-center justify-center">
@@ -133,7 +133,7 @@ export default function ProjectDetailPage() {
         </div>
 
         {/* Right Column - Project Info & Purchase */}
-        <div className="space-y-6 animate-fadeInRight">
+        <div className="space-y-4 sm:space-y-6 animate-fadeInRight">
           {/* Project Info Card */}
           <div className="glass-card rounded-2xl p-6 sticky top-24">
             <div className="space-y-6">
