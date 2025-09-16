@@ -21,12 +21,20 @@ export default function WalletProviderClient({ children }: { children: React.Rea
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider theme={darkTheme()}>
           {/* Floating Sticky Navbar */}
-          <header className="fixed top-2 sm:top-4 left-1/2 w-[98%] sm:w-[95%] max-w-6xl floating-navbar rounded-2xl z-50 opacity-0 animate-slideDown" style={{transform: 'translateX(-50%)'}}>
+          <header className="fixed top-2 sm:top-4 left-1/2 w-[98%] sm:w-[95%] max-w-6xl floating-navbar rounded-2xl z-50 opacity-0 animate-slideDown" style={{ transform: 'translateX(-50%)' }}>
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
               {/* Logo Section */}
               <div className="flex items-center gap-2 sm:gap-3 z-10">
                 <div className="relative">
-                  <Image src="/webwhite.png" alt="Triturus Logo" width={32} height={32} className="sm:w-10 sm:h-10 object-contain logo-clean" />
+                  <Image
+                    src="/webwhite.png"
+                    alt="Triturus Logo"
+                    width={32}
+                    height={32}
+                    className="sm:w-10 sm:h-10 object-contain"
+                    priority
+                    unoptimized
+                  />
                 </div>
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Triturus
@@ -61,7 +69,7 @@ export default function WalletProviderClient({ children }: { children: React.Rea
               {/* Right Section */}
               <div className="flex items-center gap-3 z-10">
                 {/* Mobile Menu Button */}
-                <button 
+                <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="lg:hidden text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
                 >
@@ -73,7 +81,7 @@ export default function WalletProviderClient({ children }: { children: React.Rea
                     )}
                   </svg>
                 </button>
-                
+
                 {/* Connect Button */}
                 <div className="scale-90 sm:scale-100">
                   <CustomConnectButton />
@@ -85,32 +93,32 @@ export default function WalletProviderClient({ children }: { children: React.Rea
             {isMobileMenuOpen && (
               <div className="lg:hidden border-t border-white/10 px-4 py-4">
                 <nav className="flex flex-col gap-3">
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 text-white/80 hover:text-white transition-all py-2 px-3 rounded-lg hover:bg-white/10"
                   >
                     <span className="text-lg">🏠</span>
                     <span>Home</span>
                   </Link>
-                  <Link 
-                    href="/showcase" 
+                  <Link
+                    href="/showcase"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 text-white/80 hover:text-white transition-all py-2 px-3 rounded-lg hover:bg-white/10"
                   >
                     <span className="text-lg">🎨</span>
                     <span>Showcase</span>
                   </Link>
-                  <Link 
-                    href="/mint" 
+                  <Link
+                    href="/mint"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 text-white/80 hover:text-white transition-all py-2 px-3 rounded-lg hover:bg-white/10"
                   >
                     <span className="text-lg">⚡</span>
                     <span>Mint NFT</span>
                   </Link>
-                  <Link 
-                    href="/profile" 
+                  <Link
+                    href="/profile"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 text-white/80 hover:text-white transition-all py-2 px-3 rounded-lg hover:bg-white/10"
                   >
