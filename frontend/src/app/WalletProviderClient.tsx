@@ -21,13 +21,12 @@ export default function WalletProviderClient({ children }: { children: React.Rea
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider theme={darkTheme()}>
           {/* Floating Sticky Navbar */}
-          <header className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 w-[98%] sm:w-[95%] max-w-6xl floating-navbar rounded-2xl z-50">
+          <header className="fixed top-2 sm:top-4 left-1/2 w-[98%] sm:w-[95%] max-w-6xl floating-navbar rounded-2xl z-50 opacity-0 animate-slideDown" style={{transform: 'translateX(-50%)'}}>
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
               {/* Logo Section */}
               <div className="flex items-center gap-2 sm:gap-3 z-10">
                 <div className="relative">
-                  <Image src="/logo.png" alt="Triturus Logo" width={32} height={32} className="sm:w-10 sm:h-10 rounded-full shadow-lg object-cover ai-glow" />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
+                  <Image src="/webwhite.png" alt="Triturus Logo" width={32} height={32} className="sm:w-10 sm:h-10 object-contain logo-clean" />
                 </div>
                 <span className="text-lg sm:text-2xl font-bold text-white tracking-wide bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Triturus

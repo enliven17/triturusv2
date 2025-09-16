@@ -46,11 +46,11 @@ export default function Home() {
   };
 
   const renderWelcome = () => (
-    <div className="w-full glass-card rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6 sm:gap-8 hover-lift">
-      <div className="text-center space-y-3 sm:space-y-4">
+    <div className="w-full glass-card rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 flex flex-col gap-6 sm:gap-8 hover-lift animate-fadeInUp">
+      <div className="text-center space-y-3 sm:space-y-4 animate-stagger-1">
         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-3 sm:px-4 py-2 rounded-full border border-blue-500/30">
           <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-          <span className="text-blue-300 text-xs sm:text-sm font-medium">AI-Powered Platform</span>
+          <span className="text-blue-300 text-xs sm:text-sm font-medium">AI-Powered</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
           Welcome to Triturus
@@ -61,17 +61,17 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group">
+        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group animate-stagger-2">
           <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">🤖</div>
           <h3 className="font-bold text-white text-base sm:text-lg mb-2">AI-Enhanced Showcase</h3>
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed">Use AI to optimize your portfolio presentation and reach</p>
         </div>
-        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group">
+        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group animate-stagger-3">
           <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">⚡</div>
           <h3 className="font-bold text-white text-base sm:text-lg mb-2">Smart NFT Minting</h3>
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed">AI-powered metadata generation and pricing optimization</p>
         </div>
-        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group sm:col-span-2 lg:col-span-1">
+        <div className="glass p-4 sm:p-6 rounded-xl sm:rounded-2xl text-center hover-lift group sm:col-span-2 lg:col-span-1 animate-stagger-4">
           <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">💰</div>
           <h3 className="font-bold text-white text-base sm:text-lg mb-2">Intelligent Support</h3>
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed">AI-driven audience matching and revenue optimization</p>
@@ -88,7 +88,7 @@ export default function Home() {
   const renderDashboard = () => (
     <div className="w-full space-y-6 sm:space-y-8">
       {/* AI Assistant Card */}
-      <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover-lift">
+      <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover-lift animate-fadeInUp">
         <div className="flex items-center gap-3 sm:gap-4 mb-4">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center ai-glow">
             <span className="text-lg sm:text-xl">🤖</span>
@@ -103,7 +103,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="glass-card rounded-3xl p-8 hover-lift">
+      <div className="glass-card rounded-3xl p-8 hover-lift animate-stagger-2">
         <h2 className="text-3xl font-bold text-white mb-8 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Your AI-Powered Dashboard
         </h2>
@@ -167,7 +167,7 @@ export default function Home() {
         </div>
       </div>
       
-      <div className="glass-card rounded-3xl p-8 hover-lift">
+      <div className="glass-card rounded-3xl p-8 hover-lift animate-stagger-3">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center ai-glow">
             <span className="text-white text-lg">💎</span>

@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="icon" href="/webwhite.ico" sizes="any" />
+        <link rel="icon" href="/webwhite.png" type="image/png" />
       </head>
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased min-h-screen flex flex-col relative overflow-x-hidden`}

@@ -32,7 +32,7 @@ export default function MintPage() {
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center w-full max-w-2xl mt-12 text-white">
-        <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
+        <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20 text-center animate-fadeInUp">
           <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Mint Your Work as NFT
           </h1>
@@ -47,7 +47,7 @@ export default function MintPage() {
 
   return (
     <div className="flex flex-col items-center w-full max-w-6xl mt-4 sm:mt-8 lg:mt-12 text-white px-4 sm:px-6 lg:px-8">
-      <div className="w-full glass-card rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8">
+      <div className="w-full glass-card rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 animate-fadeInUp">
         <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-6">
           Mint Your Project as NFT
         </h1>

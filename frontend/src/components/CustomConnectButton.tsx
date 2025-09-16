@@ -1,7 +1,11 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export default function CustomConnectButton() {
+interface CustomConnectButtonProps {
+  variant?: "default" | "large";
+}
+
+export default function CustomConnectButton({ variant = "default" }: CustomConnectButtonProps) {
   return (
     <ConnectButton.Custom>
       {({
@@ -33,11 +37,15 @@ export default function CustomConnectButton() {
           >
             {(() => {
               if (!connected) {
+                const buttonClasses = variant === "large"
+                  ? "w-full py-4 bg-white/15 hover:bg-white/20 text-white font-bold text-lg rounded-xl border border-white/30 hover:border-white/40 hover:scale-[1.02] transition-all"
+                  : "bg-yellow-400 hover:bg-yellow-300 text-[#232946] font-semibold px-5 py-2 rounded-lg shadow-md transition-all";
+
                 return (
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="bg-yellow-400 hover:bg-yellow-300 text-[#232946] font-semibold px-5 py-2 rounded-lg shadow-md transition-all"
+                    className={buttonClasses}
                   >
                     Connect Wallet
                   </button>

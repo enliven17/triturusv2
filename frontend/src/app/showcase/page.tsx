@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 
 export default function ShowcasePage() {
   const { isConnected } = useAccount();
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -43,7 +45,7 @@ export default function ShowcasePage() {
   return (
     <div className="flex flex-col items-center w-full max-w-[1400px] mt-4 sm:mt-8 lg:mt-12 text-white space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
-      <div className="w-full glass-card rounded-3xl p-8 hover-lift">
+      <div className="w-full glass-card rounded-3xl p-8 hover-lift animate-fadeInUp">
         <div className="text-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-4 py-2 rounded-full border border-blue-500/30">
             <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
@@ -80,7 +82,7 @@ export default function ShowcasePage() {
       </div>
 
       {/* AI Insights */}
-      <div className="w-full glass rounded-2xl p-6">
+      <div className="w-full glass rounded-2xl p-6 animate-stagger-1">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center ai-glow">
             <span className="text-white text-sm">🧠</span>
@@ -101,9 +103,13 @@ export default function ShowcasePage() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 w-full animate-stagger-2">
         {mockProjects.map((project) => (
-          <div key={project.id} className="glass-card rounded-2xl overflow-hidden hover-lift group">
+          <div 
+            key={project.id} 
+            onClick={() => router.push(`/showcase/${project.id}`)}
+            className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer"
+          >
             <div className="h-48 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-cyan-500/20 flex items-center justify-center relative overflow-hidden">
               <span className="text-5xl group-hover:scale-110 transition-transform">🎨</span>
               <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs px-2 py-1 rounded-full font-medium">
@@ -131,16 +137,11 @@ export default function ShowcasePage() {
               </div>
               
               <div className="flex justify-between items-center pt-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-green-400 font-bold text-lg">{project.price}</span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-yellow-400 text-sm">⭐</span>
-                    <span className="text-white/60 text-xs">4.8</span>
-                  </div>
+                <span className="text-green-400 font-bold text-lg">{project.price}</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-yellow-400 text-sm">⭐</span>
+                  <span className="text-white/60 text-xs">4.8</span>
                 </div>
-                <button className="px-4 py-2 bg-white/10 hover:bg-white/15 text-white rounded-xl hover:scale-[1.02] transition-all text-sm font-medium border border-white/20 hover:border-white/30">
-                  💎 Support
-                </button>
               </div>
             </div>
           </div>
@@ -149,7 +150,7 @@ export default function ShowcasePage() {
 
       {/* Connect Wallet CTA */}
       {!isConnected && (
-        <div className="w-full glass-card rounded-2xl p-8 text-center hover-lift">
+        <div className="w-full glass-card rounded-2xl p-8 text-center hover-lift animate-stagger-3">
           <div className="space-y-4">
             <div className="text-4xl">🔐</div>
             <h3 className="text-xl font-bold text-white">Unlock Full AI Features</h3>
