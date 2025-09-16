@@ -6,7 +6,7 @@ import WalletProviderClient from "./WalletProviderClient";
 
 export const metadata: Metadata = {
   title: "Triturus",
-  description: "Polygon Amoy Donation Platform",
+  description: "AI-Powered Freelance Hub on Polygon - Showcase, Mint NFTs, and Get Support",
 };
 
 export default function RootLayout({
@@ -21,29 +21,41 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" />
       </head>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} antialiased min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1b2e6f] to-[#3c3c6c] relative`}
+        className={`${GeistSans.variable} ${GeistMono.variable} antialiased min-h-screen flex flex-col relative overflow-x-hidden`}
       >
-        {/* Animated Background Placeholder */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#0a174e] via-[#1b2e6f] to-[#3c3c6c] opacity-90" />
-        <WalletProviderClient>
-          {/* Main Content */}
-          <main className="flex flex-col items-center justify-center min-h-[80vh] w-full px-2 sm:px-0">
-            {children}
-          </main>
-        </WalletProviderClient>
-        {/* Footer */}
-        <footer className="w-full flex items-center justify-center gap-4 py-2 bg-white/5 backdrop-blur-md border-t border-white/10 text-white/60 text-sm fixed bottom-0 left-0">
-          <span>&copy; {new Date().getFullYear()} Triturus</span>
-          <a
-            href="https://x.com/TriturusApp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 text-white/80 hover:text-blue-400 font-semibold transition-colors"
-            title="X (Twitter)"
-          >
-            X
-          </a>
-        </footer>
+        {/* Animated Dark Background */}
+        <div className="fixed inset-0 -z-10 animate-gradient" />
+        <div className="fixed inset-0 -z-10 bg-black/20" />
+        
+        {/* Floating AI Particles */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/30 rounded-full ai-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-purple-400/40 rounded-full ai-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-400/35 rounded-full ai-pulse" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="flex flex-col min-h-screen">
+          <WalletProviderClient>
+            {/* Main Content with navbar spacing */}
+            <main className="flex-1 flex flex-col items-center justify-start w-full px-2 sm:px-0 pt-24 pb-8">
+              {children}
+            </main>
+          </WalletProviderClient>
+          
+          {/* Static Footer at bottom */}
+          <footer className="w-full flex items-center justify-center gap-4 py-4 glass border-t border-white/10 text-white/60 text-sm mt-auto">
+            <span>&copy; {new Date().getFullYear()} Triturus</span>
+            <a
+              href="https://x.com/TriturusApp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-white/80 hover:text-blue-400 font-semibold transition-colors"
+              title="X (Twitter)"
+            >
+              X
+            </a>
+          </footer>
+        </div>
       </body>
     </html>
   );
