@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 
 const mockTx = {
   hash: "0xabc123...def456",
-  from: "bob@tri",
-  to: "alice@tri",
+  from: "0x1111...aaaa",
+  to: "0x2222...bbbb",
   amount: 2.5,
   time: "2m ago",
 };
@@ -19,7 +19,7 @@ export default function TransactionDetails() {
           <div><b>Hash:</b> <span className="font-mono">{mockTx.hash}</span></div>
           <div><b>From:</b> <span>{mockTx.from}</span></div>
           <div><b>To:</b> <span>{mockTx.to}</span></div>
-          <div><b>Amount:</b> <span className="font-mono">{mockTx.amount} SUI</span></div>
+          <div><b>Amount:</b> <span className="font-mono">{mockTx.amount} MATIC</span></div>
           <div><b>Time:</b> <span>{mockTx.time}</span></div>
         </div>
         <button className="mt-4 px-6 py-2 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition self-center" onClick={() => router.back()}>

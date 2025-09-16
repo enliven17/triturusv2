@@ -6,7 +6,7 @@ import WalletProviderClient from "./WalletProviderClient";
 
 export const metadata: Metadata = {
   title: "Triturus",
-  description: "Sui Wallet Donation Platform",
+  description: "Polygon Amoy Donation Platform",
 };
 
 export default function RootLayout({

@@ -1,26 +1,21 @@
 # Triturus
 
-Triturus, Sui blockchain üzerinde çalışan, kullanıcıların @tri isimleri alarak bağış toplayabildiği bir platformdur. Sui cüzdan entegrasyonu ile donatılmıştır.
+Triturus artık Polygon PoS: Amoy (Testnet) üzerinde çalışan, kullanıcıların MATIC ile bağış gönderebildiği hafif bir web uygulamasıdır. Cüzdan entegrasyonu Wagmi + Viem ile yapılmıştır.
 
 ## Proje Yapısı
 
 Proje, aşağıdaki ana bileşenlerden oluşmaktadır:
 
-- **Frontend**: Next.js, Tailwind CSS ve TypeScript kullanılarak geliştirilmiş, kullanıcı arayüzü ve cüzdan entegrasyonu.
-- **Sui Contract**: Move dilinde yazılmış, kullanıcı adı kaydı ve bağış işlemlerini yöneten akıllı kontrat.
+- **Frontend**: Next.js, Tailwind CSS ve TypeScript kullanılarak geliştirilmiş kullanıcı arayüzü ve cüzdan entegrasyonu (Wagmi + Viem).
 
 ### Dizin Yapısı
 
 ```
 triturusv2/
-├── frontend/           # Next.js frontend uygulaması
-│   ├── src/            # Kaynak kodları
-│   ├── public/         # Statik dosyalar
-│   └── package.json    # Frontend bağımlılıkları
-└── sui-contract/       # Sui Move kontratı
-    └── donation/       # Donation modülü
-        ├── sources/    # Move kaynak dosyaları
-        └── Move.toml   # Move yapılandırması
+└── frontend/           # Next.js frontend uygulaması
+    ├── src/            # Kaynak kodları
+    ├── public/         # Statik dosyalar
+    └── package.json    # Frontend bağımlılıkları
 ```
 
 ## Kurulum
@@ -42,27 +37,17 @@ triturusv2/
    npm run dev
    ```
 
-### Sui Contract
+### Ağ Bilgisi
 
-1. Sui contract dizinine gidin:
-   ```bash
-   cd sui-contract/donation
-   ```
-
-2. Move modülünü derleyin:
-   ```bash
-   sui move build
-   ```
-
-3. Modülü deploy edin:
-   ```bash
-   sui client publish --gas-budget 100000000
-   ```
+- Network Name: Polygon Amoy Testnet
+- RPC: https://rpc-amoy.polygon.technology/
+- Chain ID: 80002
+- Currency Symbol: MATIC
+- Explorer: https://www.oklink.com/amoy
 
 ## Kullanım
 
-- **Kullanıcı Adı Kaydı**: Kullanıcılar, @tri isimlerini kaydederek bağış alabilirler.
-- **Bağış Yapma**: Kullanıcılar, kayıtlı @tri isimlerine bağış yapabilirler.
+- **Bağış Yapma**: Kullanıcılar, bir 0x... adresine MATIC bağışı gönderebilir.
 
 ## Katkıda Bulunma
 

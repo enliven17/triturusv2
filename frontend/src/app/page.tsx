@@ -1,16 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  useCurrentAccount,
-  useSignAndExecuteTransactionBlock,
-  useSuiClient,
-} from "@mysten/dapp-kit";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useAccount, useSendTransaction } from "wagmi";
+import { parseEther } from "viem";
 import dynamic from "next/dynamic";
 
-const REGISTRY_ID = process.env.NEXT_PUBLIC_REGISTRY_ID!;
 const CustomConnectButton = dynamic(() => import("../components/CustomConnectButton"), { ssr: false });
 
 function shortenAddress(address: string) {
@@ -19,10 +12,8 @@ function shortenAddress(address: string) {
 }
 
 export default function Home() {
-  const account = useCurrentAccount();
-  const suiClient = useSuiClient();
-  const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
-  const router = useRouter();
+  const { address, isConnected } = useAccount();
+  const { sendTransactionAsync } = useSendTransaction();
 
   const [mounted, setMounted] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -31,73 +22,36 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted && account) {
-      router.replace("/");
-    }
-  }, [mounted, account, router]);
+  useEffect(() => { setMounted(true); }, []);
 
   const handleSend = async () => {
-    if (!account || !recipient || !amount || Number(amount) <= 0) {
+    if (!isConnected || !address || !recipient || !amount || Number(amount) <= 0) {
       setError("Please fill all fields correctly.");
       return;
     }
     setIsSending(true);
     setError(null);
-
     try {
-      let toAddress = recipient;
-      if (recipient.endsWith("@tri")) {
-        const name = recipient.slice(0, -4);
-        const field = await suiClient.getDynamicFieldObject({
-          parentId: REGISTRY_ID,
-          name: {
-            type: "vector<u8>",
-            value: Array.from(new TextEncoder().encode(name)),
-          },
-        });
-        if (field.data?.content?.dataType === 'moveObject') {
-           toAddress = (field.data.content.fields as { value: string }).value;
-        } else {
-          throw new Error(`@tri name "${recipient}" not found.`);
-        }
-      }
-
-      const tx = new TransactionBlock();
-      const [coin] = tx.splitCoins(tx.gas, [tx.pure(Math.floor(Number(amount) * 1e9))]);
-      tx.transferObjects([coin], tx.pure(toAddress));
-
-      signAndExecute(
-        { transactionBlock: tx },
-        {
-          onError: (err: Error) => {
-            setError(err.message);
-          },
-          onSuccess: () => {
-            setShowModal(true);
-          },
-        }
-      );
+      await sendTransactionAsync({
+        to: recipient as `0x${string}`,
+        value: parseEther(amount),
+      });
+      setShowModal(true);
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
-      console.error("Donation failed:", errorMessage);
       setError(errorMessage);
     } finally {
       setIsSending(false);
     }
   };
-  
+
   const renderWelcome = () => (
     <div className="w-full bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 flex flex-col gap-6 border border-white/20">
       <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
         Welcome to Triturus
       </h1>
       <p className="text-center text-lg text-white/80">
-        Your decentralized identity on the Sui blockchain. Please connect your wallet to get started.
+        Connect your wallet on Polygon Amoy to get started.
       </p>
       <div className="w-full mt-4 flex justify-center">
         <CustomConnectButton />
@@ -112,17 +66,17 @@ export default function Home() {
         <label className="block text-white/80 mb-1">Recipient</label>
         <input
           className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-          placeholder="Enter Sui address or @tri username"
+          placeholder="0x... address on Polygon Amoy"
           value={recipient}
           onChange={(e) => setRecipient(e.target.value)}
         />
       </div>
       <div>
-        <label className="block text-white/80 mb-1">Amount (SUI)</label>
+        <label className="block text-white/80 mb-1">Amount (MATIC)</label>
         <input
           type="number"
-          min="0.01"
-          step="0.01"
+          min="0.001"
+          step="0.001"
           className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
           placeholder="0.00"
           value={amount}
@@ -142,7 +96,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center w-full max-w-2xl mt-12 text-white">
-      {mounted && !account ? renderWelcome() : mounted && account ? renderDonation() : null}
+      {mounted && !isConnected ? renderWelcome() : mounted && isConnected ? renderDonation() : null}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50" onClick={() => setShowModal(false)}>
           <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 text-gray-800" onClick={(e) => e.stopPropagation()}>
